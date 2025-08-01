@@ -8,6 +8,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
 
 @Component
@@ -33,7 +34,8 @@ public class AvlCommands {
 
     @ShellMethod(key = "avl stat", value = "Shows statistics of the current simulation.")
     public String stat() {
-        return "stat";
+        StatResponse statResponse = avlClientPort.getStats();
+        return "Active AVL devices: " + statResponse.getAvl();
     }
 
     @ShellMethod(key = "avl remove all", value = "Remove all devices")

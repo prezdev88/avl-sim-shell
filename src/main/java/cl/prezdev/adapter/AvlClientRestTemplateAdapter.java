@@ -1,6 +1,7 @@
 package cl.prezdev.adapter;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AvlClientRestTemplateAdapter implements AvlClientPort {
 
     private RestTemplate restTemplate;
-    
+
     @Value("${avl.client.base-url}")
     private String baseUrl;
 
@@ -33,5 +34,14 @@ public class AvlClientRestTemplateAdapter implements AvlClientPort {
                 .toUriString();
 
         return restTemplate.postForObject(url, null, AddAvlResponse.class);
+    }
+
+    @Override
+    public StatResponse getStats() {
+        String url = UriComponentsBuilder
+                .fromUriString(baseUrl + "/api/avl/stat")
+                .toUriString();
+
+        return restTemplate.getForObject(url, StatResponse.class);
     }
 }
