@@ -1,12 +1,14 @@
 package cl.prezdev.adapter;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.RemoveAllResponse;
 import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -43,5 +45,14 @@ public class AvlClientRestTemplateAdapter implements AvlClientPort {
                 .toUriString();
 
         return restTemplate.getForObject(url, StatResponse.class);
+    }
+    
+    @Override
+    public RemoveAllResponse removeAll() {
+        String url = UriComponentsBuilder
+                .fromUriString(baseUrl + "/api/avl/remove-all")
+                .toUriString();
+
+        return restTemplate.exchange(url, HttpMethod.DELETE, null, RemoveAllResponse.class).getBody();
     }
 }

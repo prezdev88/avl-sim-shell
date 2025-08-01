@@ -8,6 +8,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.RemoveAllResponse;
 import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
 
@@ -40,7 +41,8 @@ public class AvlCommands {
 
     @ShellMethod(key = "avl remove all", value = "Remove all devices")
     public String removeAll() {
-        return "remove";
+        RemoveAllResponse response = avlClientPort.removeAll();
+        return "[OK] Removed " + response.getRemoved() + " devices.";
     }
 
     @ShellMethod(key = "avl start", value = "Starts all simulated AVL devices.")
