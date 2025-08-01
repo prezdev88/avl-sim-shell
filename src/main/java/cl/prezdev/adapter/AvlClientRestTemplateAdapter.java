@@ -5,6 +5,7 @@ import cl.prezdev.port.AvlClientPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,7 +15,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AvlClientRestTemplateAdapter implements AvlClientPort {
 
     private RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:8080";
+    
+    @Value("${avl.client.base-url}")
+    private String baseUrl;
 
     @PostConstruct
     public void init() {
