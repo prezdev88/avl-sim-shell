@@ -1,6 +1,7 @@
 package cl.prezdev.adapter;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.ListAvlResponse;
 import cl.prezdev.model.response.RemoveAllResponse;
 import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
@@ -45,6 +46,22 @@ public class AvlClientRestTemplateAdapter implements AvlClientPort {
                 .toUriString();
 
         return restTemplate.getForObject(url, StatResponse.class);
+    }
+    
+    @Override
+    public ListAvlResponse listAvls(Integer page, Integer size) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
+                .fromUriString(baseUrl + "/api/avl/list");
+                
+        if (page != null) {
+            uriBuilder.queryParam("page", page);
+        }
+        if (size != null) {
+            uriBuilder.queryParam("size", size);
+        }
+        
+        String url = uriBuilder.toUriString();
+        return restTemplate.getForObject(url, ListAvlResponse.class);
     }
     
     @Override

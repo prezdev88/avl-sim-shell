@@ -8,6 +8,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
 import cl.prezdev.model.response.AddAvlResponse;
+import cl.prezdev.model.response.ListAvlResponse;
 import cl.prezdev.model.response.RemoveAllResponse;
 import cl.prezdev.model.response.StatResponse;
 import cl.prezdev.port.AvlClientPort;
@@ -29,8 +30,38 @@ public class AvlCommands {
     }
 
     @ShellMethod(key = "avl list", value = "Lists all active simulated devices.")
-    public String list() {
-        return "list";
+    public String list(
+        @ShellOption(value = "--page", defaultValue = "1", help = "Page number (starting from 1)") Integer page,
+        @ShellOption(value = "--size", defaultValue = "10", help = "Page size") Integer size
+    ) {
+        ListAvlResponse response = avlClientPort.listAvls(page - 1, size);
+        
+        if (response.getAvls().isEmpty()) {
+            return "No AVL devices found.";
+        }
+        
+        StringBuilder result = new StringBuilder();
+        result.append("AVL Devices (Page ").append(response.getPage() + 1)
+              .append(" of ").append(response.getTotalPages()).append("):").append(System.lineSeparator());
+        result.append("Total Elements: ").append(response.getTotalElements()).append(System.lineSeparator()).append(System.lineSeparator());
+        
+        for (int i = 0; i < response.getAvls().size(); i++) {
+            var avl = response.getAvls().get(i);
+            result.append(String.format("%2d. ID: %d | IMEI: %s | Provider: %s | Started: %s%n",
+                i + 1, avl.getId(), avl.getImei(), avl.getProvider(), 
+                avl.isStarted() ? "YES" : "NO"));
+        }
+        
+        result.append(System.lineSeparator()).append("Navigation: ");
+        if (!response.isFirst()) {
+            result.append(String.format("[Use --page %d] ← Previous | ", response.getPage()));
+        }
+        result.append("Current Page ").append(response.getPage() + 1).append(" of ").append(response.getTotalPages());
+        if (!response.isLast()) {
+            result.append(String.format(" | Next → [Use --page %d]", response.getPage() + 2));
+        }
+        
+        return result.toString();
     }
 
     @ShellMethod(key = "avl stat", value = "Shows statistics of the current simulation.")
