@@ -7,7 +7,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 
-import cl.prezdev.adapter.AvlClientHttpAdapter;
 import cl.prezdev.model.response.AddAvlResponse;
 import cl.prezdev.port.AvlClientPort;
 
