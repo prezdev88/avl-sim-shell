@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import cl.prezdev.model.response.AddAvlResponse;
 import cl.prezdev.model.response.ListAvlResponse;
 import cl.prezdev.model.response.RemoveAllResponse;
+import cl.prezdev.model.response.StartAllResponse;
 import cl.prezdev.model.response.StatResponse;
+import cl.prezdev.model.response.StopAvlResponse;
 import cl.prezdev.port.AvlClientPort;
 
 @Component
@@ -78,11 +80,13 @@ public class AvlCommands {
 
     @ShellMethod(key = "avl start", value = "Starts all simulated AVL devices.")
     public String startAll() {
-        return "[OK] All devices started.";
+        StartAllResponse response = avlClientPort.startAll();
+        return String.format("[OK] %s", response.getMessage());
     }
 
     @ShellMethod(key = "avl stop", value = "Stops all simulated AVL devices.")
     public String stopAll() {
-        return "[OK] All devices stopped.";
+        StopAvlResponse response = avlClientPort.stopAll();
+        return "[OK] " + response.getMessage();
     }
 }

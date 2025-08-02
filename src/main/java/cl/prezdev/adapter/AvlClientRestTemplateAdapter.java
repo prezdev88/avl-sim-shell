@@ -3,7 +3,9 @@ package cl.prezdev.adapter;
 import cl.prezdev.model.response.AddAvlResponse;
 import cl.prezdev.model.response.ListAvlResponse;
 import cl.prezdev.model.response.RemoveAllResponse;
+import cl.prezdev.model.response.StartAllResponse;
 import cl.prezdev.model.response.StatResponse;
+import cl.prezdev.model.response.StopAvlResponse;
 import cl.prezdev.port.AvlClientPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +73,23 @@ public class AvlClientRestTemplateAdapter implements AvlClientPort {
                 .toUriString();
 
         return restTemplate.exchange(url, HttpMethod.DELETE, null, RemoveAllResponse.class).getBody();
+    }
+
+    @Override
+    public StartAllResponse startAll() {
+        String url = UriComponentsBuilder
+                .fromUriString(baseUrl + "/api/avl/start")
+                .toUriString();
+
+        return restTemplate.postForObject(url, null, StartAllResponse.class);
+    }
+
+    @Override
+    public StopAvlResponse stopAll() {
+        String url = UriComponentsBuilder
+                .fromUriString(baseUrl + "/api/avl/stop")
+                .toUriString();
+
+        return restTemplate.postForObject(url, null, StopAvlResponse.class);
     }
 }
